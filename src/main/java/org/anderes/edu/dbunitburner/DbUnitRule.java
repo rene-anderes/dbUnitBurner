@@ -4,10 +4,12 @@ import static org.apache.commons.lang3.StringUtils.containsNone;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.junit.Assert.fail;
-
 import static java.lang.annotation.ElementType.*;
+
 import java.lang.annotation.Retention;
+
 import static java.lang.annotation.RetentionPolicy.*;
+
 import java.lang.annotation.Target;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -43,6 +45,8 @@ import org.dbunit.util.fileloader.XlsDataFileLoader;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Diese JUnit-Rule bietet die Möglichkeit mittels Annotations die für den
@@ -77,6 +81,8 @@ import org.junit.runners.model.Statement;
  *
  */
 public class DbUnitRule implements TestRule {
+    
+    private Logger logger = LoggerFactory.getLogger(DbUnitRule.class);
 
     @Retention(RUNTIME)
     @Target({METHOD, TYPE})
@@ -187,7 +193,7 @@ public class DbUnitRule implements TestRule {
             final List<String> commands = SqlHelper.extractSqlCommands(Paths.get(cleanupFile));
             int[] values = SqlHelper.execute(databaseTester.getConnection().getConnection(), commands);
             for (int index = 0 ; index < commands.size(); index++) {
-                System.out.println(commands.get(index) + ", Result: " + values[index]);
+                logger.info(commands.get(index) + ", Result: " + values[index]);
             }
         }
     }
