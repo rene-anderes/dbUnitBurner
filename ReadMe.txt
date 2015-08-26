@@ -1,13 +1,13 @@
 dbUnitBurner
 
 Diese JUnit-Rule bietet die Möglichkeit mittels Annotations die für den Test notwendigen DB-Files (in den von DBUnit unterstützten Formaten) anzugeben:
-   @UsingDataSet(value = { "/prepaire.xls" })
+   @UsingDataSet(value = { "/prepare.xls" })
    
 Es können auch mehrere Files angegeben werden:
    @UsingDataSet(value = { "/Person.xls", "Offer.xls" })
  
 Ebenfalls können das oder die Files angegeben werden mittels denen DBUnit die Datenbank nach der Test-Methode überprüft:
-   @ShouldMatchDataSet(<br>
+   @ShouldMatchDataSet(
         value = { "/expectedAfterDelete.xls" },
         excludeColumns = { "INGREDIENT.ID" },
         orderBy = { "RECIPE.UUID", "INGREDIENT.ID" })
