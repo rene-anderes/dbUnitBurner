@@ -30,7 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/sample/application-context.xml" })
+@ContextConfiguration(locations = { "classpath:/sample/application-context.xml", "classpath:/sample/rule-context.xml" })
 @CleanupUsingScript(value = { "/sql/DeleteTableContentScript.sql" })
 @UsingDataSet(value = { "/sample/prepare.xls" })
 public class RecipeRepositoryClassAnnotationsIT {

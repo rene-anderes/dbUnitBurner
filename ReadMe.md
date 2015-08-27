@@ -27,6 +27,14 @@ Als Basis für diese JUnit-Rule dient DBUnit (siehe http://dbunit.sourceforge.ne
 
 Die Annotierungen @UsingDataSet und @CleanupUsingScript können sowohl für eine Methode als auch für eine Klasse gesetzt werden. Werden die Annotierungen auf der Klasse angebracht, so wird für jede Test-Methode die entsprechenden Files verwendet.
 
+### Timestamp
+Mittels der Data-Type-Factory ```CustomDataTypeFactory``` ist es möglich ein Zeitstempel in folgenden Formaten im Datenbankfile abzulegen:
+```
+    dd.MM.yyyy HH:mm:ss     (Nanosekunden sind 0)
+    dd.MM.yyyy HH:mm        (Sekunden und Nanosekunden sind 0)
+    dd.MM.yyyy              (Stunden, Minuten, Sekunden und Nanosekunden sind 0)
+```
+### JSON
 Neben den von DBUnit unterstützen Formaten (XML, CSV und XLS Dateien) können auch JSON-Files eingesetzt werden um die Datenbank zu befüllen.
 Beispiel mit drei Tabellen (RECIPE, TAGS und INGREDIENT)
 ```

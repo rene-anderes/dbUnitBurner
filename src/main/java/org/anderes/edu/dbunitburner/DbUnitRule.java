@@ -19,13 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.lang3.Validate;
 import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.IOperationListener;
-import org.dbunit.database.DatabaseConfig;
+import static org.dbunit.database.DatabaseConfig.*;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
@@ -66,7 +68,7 @@ import org.slf4j.LoggerFactory;
  * Wie das Beispiel zeigt können Sortierung und Ausnahmen für den Vergleich
  * definiert werden. Format: [Tabellenname].[Spaltennamen]
  * <p>
- * Wenn gwünscht, kann auch ein SQL-Script angegeben werden, mittels dem die Tabelle(n)
+ * Wenn gewünscht, kann auch ein SQL-Script angegeben werden, mittels dem die Tabelle(n)
  * vor der Test-Methode gelöscht werden.
  * <p><code>@CleanupUsingScript(value = { "/sql/DeleteTableContentScript.sql" })</code></p>
  * <p>
@@ -124,9 +126,24 @@ public class DbUnitRule implements TestRule {
         Validate.notNull(connection, "connection darf nicht null sein");
         try {
             final DatabaseConnection databaseConnection = new DatabaseConnection(connection); 
-            databaseConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dataTypeFactory);
+            databaseConnection.getConfig().setProperty(PROPERTY_DATATYPE_FACTORY, dataTypeFactory);
             databaseTester = new DefaultDatabaseTester(databaseConnection);
         } catch (DatabaseUnitException e) {
+            fail(e.getMessage());
+        }
+    }
+    
+    public DbUnitRule(final DataSource datasource, final IDataTypeFactory dataTypeFactory) {
+        Validate.notNull(datasource, "DataSource darf nicht null sein");
+        Validate.notNull(dataTypeFactory, "dataTypeFactory darf nicht null sein");
+        try {
+            final Connection connection = datasource.getConnection();
+            final DatabaseConnection databaseConnection = new DatabaseConnection(connection ); 
+            databaseConnection.getConfig().setProperty(PROPERTY_DATATYPE_FACTORY, dataTypeFactory);
+            databaseTester = new DefaultDatabaseTester(databaseConnection);
+        } catch (DatabaseUnitException e) {
+            fail(e.getMessage());
+        } catch (SQLException e) {
             fail(e.getMessage());
         }
     }

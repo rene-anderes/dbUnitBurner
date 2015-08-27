@@ -13,8 +13,8 @@ public class CustomDataTypeFactory extends DefaultDataTypeFactory {
     private Logger logger = LoggerFactory.getLogger(DbUnitRule.class);
     
     public DataType createDataType(int sqlType, String sqlTypeName) throws DataTypeException {
-        logger.debug("--------------------------" + sqlTypeName);
         if (sqlType == Types.TIMESTAMP) {
+            logger.debug(String.format("Für den SQL-Type '%s' wird Klasse '%s' eingesetzt.", sqlTypeName, CustomTimestampDataType.class.getName()));
             return new CustomTimestampDataType();
         } else {
             return super.createDataType(sqlType, sqlTypeName);

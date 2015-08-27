@@ -20,21 +20,21 @@ public class CustomTimestampDataType extends AbstractDataType {
     }
 
     @Override
-    public Object typeCast(Object value) throws TypeCastException {
+    public Timestamp typeCast(Object value) throws TypeCastException {
         if (value == null || value == ITable.NO_VALUE) {
             return null;
         }
         if (value instanceof java.sql.Timestamp) {
-            return value;
+            return (Timestamp)value;
         }
         if (value instanceof java.util.Date) {
-            java.util.Date date = (java.util.Date) value;
-            return new java.sql.Timestamp(date.getTime());
+            final Date date = (Date) value;
+            return new Timestamp(date.getTime());
         }
 
         if (value instanceof Long) {
             Long date = (Long) value;
-            return new java.sql.Timestamp(date.longValue());
+            return new Timestamp(date.longValue());
         }
         if (value instanceof String) {
             String stringValue = (String) value;
@@ -42,20 +42,18 @@ public class CustomTimestampDataType extends AbstractDataType {
             if (stringValue.length() == 10) {
                 try {
                     long time = java.sql.Date.valueOf(stringValue).getTime();
-                    return new java.sql.Timestamp(time);
+                    return new Timestamp(time);
                 } catch (IllegalArgumentException e) {
                     // Was not a java.sql.Date, let Timestamp handle this value
                 }
             }
+            String formats[] = { "dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy HH:mm", "dd.MM.yyyy" };
             try {
-                String formats[] = { "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm a", "yyyy-MM-dd HH:mm:ss.fffffffff" };
-                Timestamp ts = null;
                 for (int i = 0; i < formats.length; i++) {
-                    SimpleDateFormat sdf = new SimpleDateFormat(formats[i]);
+                    final SimpleDateFormat sdf = new SimpleDateFormat(formats[i]);
                     try {
-                        Date date = sdf.parse(stringValue);
-                        ts = new Timestamp(date.getTime());
-                        return ts;
+                        final Date date = sdf.parse(stringValue);
+                        return new Timestamp(date.getTime());
                     } catch (ParseException e) {
                     }
                 }
