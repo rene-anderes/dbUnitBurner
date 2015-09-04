@@ -14,9 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.lang3.Validate;
+
+/**
+ * SQL-Helper für SQL-Kommandos
+ * 
+ * @author René Anderes
+ *
+ */
 public abstract class SqlHelper {
 
     public static List<String> extractSqlCommands(final Path sqlFilePath) throws IOException {
+        Validate.notNull(sqlFilePath);
         
         final InputStream is = ClassLoader.getSystemResourceAsStream(sqlFilePath.toString());
         if (is == null) {
@@ -35,6 +44,9 @@ public abstract class SqlHelper {
     }
     
     public static int[] execute(final Connection connection, final List<String> queries) throws SQLException {
+        Validate.notNull(connection);
+        Validate.notNull(queries);
+        
         final Statement stmt = connection.createStatement();
         for(String query : queries) {
             stmt.addBatch(query);

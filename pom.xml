@@ -3,19 +3,36 @@
 
     <groupId>org.anderes.edu</groupId>
     <artifactId>dbunitburner</artifactId>
-    <version>1.0.0-RELEASE</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>dbunitburner</name>
-    
+
+    <description>Junit-Rule welche die Möglichkeit bietet die für DBUnit notwendigen Datenbank-Files mittels Annotierung im Code zu verwenden.</description>
     <url>https://github.com/rene-anderes/dbUnitBurner</url>
-    
+
     <developers>
         <developer>
             <name>René Anderes</name>
             <email>rene.anderes@vrsg.ch</email>
+            <organization>VRSG</organization>
+            <organizationUrl>http://www.vrsg.ch</organizationUrl>
         </developer>
     </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/rene-anderes/dbUnitBurner.git</connection>
+        <developerConnection>scm:git:https://github.com/rene-anderes/dbUnitBurner.git</developerConnection>
+        <url>https://github.com/rene-anderes/dbUnitBurner.git</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -49,6 +66,32 @@
                         <goals>
                             <goal>integration-test</goal>
                             <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>

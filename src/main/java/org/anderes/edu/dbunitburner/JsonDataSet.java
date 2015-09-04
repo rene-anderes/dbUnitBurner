@@ -23,6 +23,12 @@ import org.dbunit.dataset.datatype.DataType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Diese Klasse wandelt einen JOSN-String in eine entsprechenden Liste von {@code ITable} um.
+ * 
+ * @author René Anderes
+ *
+ */
 public class JsonDataSet extends AbstractDataSet {
     private final JsonITableParser tableParser = new JsonITableParser();
 
