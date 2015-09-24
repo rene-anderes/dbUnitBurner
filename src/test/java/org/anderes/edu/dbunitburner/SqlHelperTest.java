@@ -44,6 +44,18 @@ public class SqlHelperTest {
         assertThat(commands.get(2), is("delete from RECIPE"));
     }
     
+    @Test
+    public void shouldBeExtractCommandsUnix() throws IOException {
+        Path sqlFile = Paths.get("sql", "DeleteTableContentScriptUnix.sql");
+        List<String> commands = SqlHelper.extractSqlCommands(sqlFile);
+        
+        assertThat(commands, is(notNullValue()));
+        assertThat(commands.size(), is(3));
+        assertThat(commands.get(0), is("delete from TAGS"));
+        assertThat(commands.get(1), is("delete from INGREDIENT"));
+        assertThat(commands.get(2), is("delete from RECIPE"));
+    }
+    
     @Test(expected = IOException.class)
     public void shouldBeWrongPath() throws IOException {
         Path sqlFile = Paths.get("notValid", "sql", "DeleteTableContentScript.sql");
@@ -53,7 +65,7 @@ public class SqlHelperTest {
     @Test
     public void shouldBeExecuteBatchCommands() throws SQLException {
         // given
-        List<String> commands = new ArrayList<String>(3);
+        final List<String> commands = new ArrayList<String>(3);
         commands.add("delete from INGREDIENT");
         commands.add("delete from TAGS");
         commands.add("delete from RECIPE");
@@ -62,8 +74,10 @@ public class SqlHelperTest {
         int[] batchResult = { 2, 4, 1 };
         when(mockStatement.executeBatch()).thenReturn(batchResult);
         when(connection.createStatement()).thenReturn(mockStatement);
+        
         // when
         int[] values = SqlHelper.execute(connection, commands);
+        
         // then
         assertThat(values.length, is(3));
         verify(mockStatement).addBatch("delete from INGREDIENT");

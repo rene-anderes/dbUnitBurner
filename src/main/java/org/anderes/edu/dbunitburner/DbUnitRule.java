@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.junit.Assert.fail;
 import static java.lang.annotation.ElementType.*;
 
+import java.io.IOException;
 import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.*;
@@ -27,7 +28,9 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.IOperationListener;
+
 import static org.dbunit.database.DatabaseConfig.*;
+
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
@@ -72,6 +75,10 @@ import org.slf4j.LoggerFactory;
  * vor der Test-Methode gelöscht werden.
  * <p><code>@CleanupUsingScript(value = { "/sql/DeleteTableContentScript.sql" })</code></p>
  * <p>
+ * Es ist auch möglich, dass für das Laden von Testdaten ein (oder mehrere) SQl-Script(s) verwendet wird:
+ * <p><code>@UsingDataSetScript(value = { "/sql/LoadTestdata.sql" })</code></p>
+ * Die SQL-Scripts sollten im UTF-8 Format (ohne BOM) vorliegen.
+ * <p>
  * Es wird im Klassenpfad nach den entsprechenden Files gesucht.<br>
  * Als Basis für diese JUnit-Rule dient DBUnit (siehe http://dbunit.sourceforge.net/)
  * <p>
@@ -103,6 +110,12 @@ public class DbUnitRule implements TestRule {
     @Retention(RUNTIME)
     @Target({METHOD, TYPE})
     public static @interface CleanupUsingScript {
+        String[] value();
+    }
+    
+    @Retention(RUNTIME)
+    @Target({METHOD, TYPE})
+    public @interface UsingDataSetScript {
         String[] value();
     }
     
@@ -168,13 +181,24 @@ public class DbUnitRule implements TestRule {
     private void before(final Description description) throws Exception {
         final UsingDataSet usingDataSet = extractUsingDataSet(description);
         final CleanupUsingScript cleanupUsingScript = extractCleanupUsingScript(description);
+        final UsingDataSetScript usingDataSetScript = extractUsingDataSetScript(description);
         DatabaseOperation databaseOperation = DatabaseOperation.CLEAN_INSERT;
         if (cleanupUsingScript != null) {
             processCleanupScripts(cleanupUsingScript);
         }
         if (usingDataSet != null) {
             processUsingDataSet(usingDataSet, databaseOperation);
+        } else if (usingDataSetScript != null) {
+            processUsingDataSetScript(usingDataSetScript);
         }
+    }
+
+    private UsingDataSetScript extractUsingDataSetScript(final Description description) {
+        UsingDataSetScript usingDataSetScript = description.getAnnotation(UsingDataSetScript.class);
+        if (usingDataSetScript == null) {
+            usingDataSetScript = description.getTestClass().getAnnotation(UsingDataSetScript.class);
+        }
+        return usingDataSetScript;
     }
 
     private CleanupUsingScript extractCleanupUsingScript(final Description description) {
@@ -206,6 +230,10 @@ public class DbUnitRule implements TestRule {
     
     private void processCleanupScripts(final CleanupUsingScript cleanupUsingScript) throws Exception {
         final String[] cleanupFiles = cleanupUsingScript.value();
+        processSqlScript(cleanupFiles);
+    }
+
+    private void processSqlScript(final String[] cleanupFiles) throws IOException, SQLException, Exception {
         for (String cleanupFile : cleanupFiles) {
             final List<String> commands = SqlHelper.extractSqlCommands(Paths.get(cleanupFile));
             int[] values = SqlHelper.execute(databaseTester.getConnection().getConnection(), commands);
@@ -213,6 +241,11 @@ public class DbUnitRule implements TestRule {
                 logger.info(commands.get(index) + ", Result: " + values[index]);
             }
         }
+    }
+
+    private void processUsingDataSetScript(final UsingDataSetScript usingDataSetScript) throws Exception {
+        final String[] usingDataSetScriptFiles = usingDataSetScript.value();
+        processSqlScript(usingDataSetScriptFiles);
     }
 
     /*package*/ CompositeDataSet buildDataSet(String[] dataSetFiles) throws DataSetException {

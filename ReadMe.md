@@ -22,6 +22,12 @@ Wenn gewünscht, kann auch ein SQL-Script angegeben werden, mittels dem die Tabe
 ```
    @CleanupUsingScript(value = { "/sql/DeleteTableContentScript.sql" })
 ```
+Es ist auch möglich, dass für das Laden von Testdaten ein (oder mehrere) SQl-Script(s) verwendet wird:
+```
+  @UsingDataSetScript(value = { "/sql/LoadTestdata.sql" })
+```
+Die SQL-Scripts sollten im UTF-8 Format (ohne BOM) vorliegen. Eine Zeile im SQL-Script entspricht einem SQl-Kommando. Ein Delemiter wie z.B. ';' ist nicht notwendig.
+
 Es wird im Klassenpfad nach den entsprechenden Files gesucht.
 Als Basis für diese JUnit-Rule dient DBUnit (siehe http://dbunit.sourceforge.net/)
 

@@ -18,6 +18,7 @@ import org.anderes.edu.dbunitburner.DbUnitRule;
 import org.anderes.edu.dbunitburner.DbUnitRule.CleanupUsingScript;
 import org.anderes.edu.dbunitburner.DbUnitRule.ShouldMatchDataSet;
 import org.anderes.edu.dbunitburner.DbUnitRule.UsingDataSet;
+import org.anderes.edu.dbunitburner.DbUnitRule.UsingDataSetScript;
 import org.anderes.edu.dbunitburner.sample.data.Ingredient;
 import org.anderes.edu.dbunitburner.sample.data.Recipe;
 import org.anderes.edu.dbunitburner.sample.data.RecipeRepository;
@@ -66,6 +67,20 @@ public class RecipeRepositoryIT {
             counter++;
         }
         assertThat(counter, is(2));
+    }
+    
+    @Test
+    @UsingDataSetScript(value = { "/sql/LoadTestdata.sql" })
+    public void shouldBeFindAllTestdata() {
+        Iterable<Recipe> recipes = repository.findAll();
+        assertThat(recipes, is(notNullValue()));
+        assertThat(recipes.iterator().hasNext(), is(true));
+        int counter = 0;
+        for (Recipe recipe : recipes) {
+            assertThat(recipe.getTitle(), is(notNullValue()));
+            counter++;
+        }
+        assertThat(counter, is(5));
     }
     
     @Test

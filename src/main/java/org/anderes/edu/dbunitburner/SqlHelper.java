@@ -1,11 +1,12 @@
 package org.anderes.edu.dbunitburner;
 
-import static org.apache.commons.lang3.StringUtils.CR;
-import static org.apache.commons.lang3.StringUtils.LF;
-import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,12 +25,18 @@ import org.apache.commons.lang3.Validate;
  */
 public abstract class SqlHelper {
 
-    public static List<String> extractSqlCommands(final Path sqlFilePath) throws IOException {
+    /**
+     * Diese Methode extrahiert SQL-Kommandos aus dem übergebenen SQL-File
+     * @param sqlFilePath Pafd des SQL-Files
+     * @return Liste von SQL-Kommandos
+     * @throws IOException wenn das File nicht gelesen werden konnte
+     */
+    public static List<String> extractSqlCommandsOld(final Path sqlFilePath) throws IOException {
         Validate.notNull(sqlFilePath);
         
         final InputStream is = ClassLoader.getSystemResourceAsStream(sqlFilePath.toString());
         if (is == null) {
-            final String msg = "Could not find file named=" + sqlFilePath;
+            final String msg = "Could not find file named = " + sqlFilePath;
             throw new IOException(msg);
         }
         final List<String> commands = new ArrayList<String>();
@@ -37,13 +44,46 @@ public abstract class SqlHelper {
         scanner.useDelimiter(";");
         
         while(scanner.hasNext()) {
-            commands.add(remove(scanner.next(), CR + LF));
+            commands.add(trimToEmpty(scanner.next()));
         }
         scanner.close();
         return commands;
     }
     
+    /**
+     * Diese Methode extrahiert SQL-Kommandos aus dem übergebenen SQL-File
+     * @param sqlFilePath Pafd des SQL-Files
+     * @return Liste von SQL-Kommandos
+     * @throws IOException wenn das File nicht gelesen werden konnte
+     */
+    public static List<String> extractSqlCommands(final Path sqlFilePath) throws IOException {
+        Validate.notNull(sqlFilePath);
+        
+        final InputStream is = ClassLoader.getSystemResourceAsStream(sqlFilePath.toString());
+        if (is == null) {
+            final String msg = "Could not find file named = " + sqlFilePath;
+            throw new IOException(msg);
+        }
+        
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8.name()));
+        final List<String> commands = new ArrayList<String>();
+        
+        String line = null;
+        while((line = bufferedReader.readLine()) != null) {
+            commands.add(substringBeforeLast(line, ";"));
+        }
+        bufferedReader.close();
+        return commands;
+    }
+    
     public static int[] execute(final Connection connection, final List<String> queries) throws SQLException {
+        Validate.notNull(connection);
+        Validate.notNull(queries);
+        
+        return execute(connection, queries.toArray(new String[]{}));
+    }
+
+    public static int[] execute(final Connection connection, final String... queries) throws SQLException {
         Validate.notNull(connection);
         Validate.notNull(queries);
         
@@ -53,5 +93,5 @@ public abstract class SqlHelper {
         }
         return stmt.executeBatch();
     }
-
+    
 }
