@@ -45,5 +45,10 @@ public class CustomTimestampDataTypeTest {
         assertThat(timestamp, is(notNullValue()));
         assertThat(timestamp, is(expectedTimestamp));
     }
+    
+    @Test(expected = TypeCastException.class)
+    public void shouldBeWrongString() throws TypeCastException {
+        datatype.typeCast("31.12-2015");
+    }
 
 }

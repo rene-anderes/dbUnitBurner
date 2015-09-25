@@ -1,6 +1,6 @@
 package org.anderes.edu.dbunitburner;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.commons.lang3.Validate;
 
@@ -26,33 +25,9 @@ import org.apache.commons.lang3.Validate;
 public abstract class SqlHelper {
 
     /**
-     * Diese Methode extrahiert SQL-Kommandos aus dem übergebenen SQL-File
-     * @param sqlFilePath Pafd des SQL-Files
-     * @return Liste von SQL-Kommandos
-     * @throws IOException wenn das File nicht gelesen werden konnte
-     */
-    public static List<String> extractSqlCommandsOld(final Path sqlFilePath) throws IOException {
-        Validate.notNull(sqlFilePath);
-        
-        final InputStream is = ClassLoader.getSystemResourceAsStream(sqlFilePath.toString());
-        if (is == null) {
-            final String msg = "Could not find file named = " + sqlFilePath;
-            throw new IOException(msg);
-        }
-        final List<String> commands = new ArrayList<String>();
-        final Scanner scanner = new Scanner(is);
-        scanner.useDelimiter(";");
-        
-        while(scanner.hasNext()) {
-            commands.add(trimToEmpty(scanner.next()));
-        }
-        scanner.close();
-        return commands;
-    }
-    
-    /**
-     * Diese Methode extrahiert SQL-Kommandos aus dem übergebenen SQL-File
-     * @param sqlFilePath Pafd des SQL-Files
+     * Diese Methode extrahiert SQL-Kommandos aus dem übergebenen SQL-File.
+     * Jede Zeile entspricht einem SQl-Kommando. 
+     * @param sqlFilePath Pfad des SQL-Files
      * @return Liste von SQL-Kommandos
      * @throws IOException wenn das File nicht gelesen werden konnte
      */

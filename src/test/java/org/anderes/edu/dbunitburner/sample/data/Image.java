@@ -2,9 +2,12 @@
 package org.anderes.edu.dbunitburner.sample.data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -16,13 +19,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Image implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	@NotNull
     @Size(min = 2, max = 255)
 	@Column(name = "IMAGE_URL")
     private String url;
 	@Size(min = 0, max = 50)
     @Column(name = "IMAGE_DESCRIPTION", length = 50)
     private String description;
+	@Temporal(TemporalType.DATE)
+    @Column(name = "IMAGE_DATE")
+    private Date imageDate = new Date();
 
     /*package*/ Image() {
     }
@@ -47,6 +52,14 @@ public class Image implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getImageDate() {
+        return new Date(imageDate.getTime());
+    }
+
+    public void setImageDate(Date imageDate) {
+        this.imageDate = new Date(imageDate.getTime());
     }
 
     @Override

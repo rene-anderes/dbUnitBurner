@@ -45,6 +45,7 @@ public class RecipeRepositoryClassAnnotationsIT {
    
     @Before
     public void setup() {
+        manager.clear();
     }
     
     @After

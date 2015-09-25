@@ -31,7 +31,7 @@ Die SQL-Scripts sollten im UTF-8 Format (ohne BOM) vorliegen. Eine Zeile im SQL-
 Es wird im Klassenpfad nach den entsprechenden Files gesucht.
 Als Basis für diese JUnit-Rule dient DBUnit (siehe http://dbunit.sourceforge.net/)
 
-Die Annotierungen @UsingDataSet und @CleanupUsingScript können sowohl für eine Methode als auch für eine Klasse gesetzt werden. Werden die Annotierungen auf der Klasse angebracht, so wird für jede Test-Methode die entsprechenden Files verwendet.
+Die Annotierungen @UsingDataSet, @UsingDataSetScript und @CleanupUsingScript können sowohl für eine Methode als auch für eine Klasse gesetzt werden. Werden die Annotierungen auf der Klasse angebracht, so wird für jede Test-Methode die entsprechenden Files verwendet.
 
 ### Timestamp
 Mittels der Data-Type-Factory ```CustomDataTypeFactory``` ist es möglich ein Zeitstempel in folgenden Formaten im Datenbankfile abzulegen:

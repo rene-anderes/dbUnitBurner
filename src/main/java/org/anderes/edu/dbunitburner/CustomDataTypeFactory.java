@@ -27,6 +27,9 @@ public class CustomDataTypeFactory extends DefaultDataTypeFactory {
         if (sqlType == Types.TIMESTAMP) {
             logger.debug(String.format("Für den SQL-Type '%s' wird Klasse '%s' eingesetzt.", sqlTypeName, CustomTimestampDataType.class.getName()));
             return new CustomTimestampDataType();
+        } else if (sqlType == Types.DATE) {
+            logger.debug(String.format("Für den SQL-Type '%s' wird Klasse '%s' eingesetzt.", sqlTypeName, CustomDateDataType.class.getName()));
+            return new CustomDateDataType();
         } else {
             return super.createDataType(sqlType, sqlTypeName);
         }
