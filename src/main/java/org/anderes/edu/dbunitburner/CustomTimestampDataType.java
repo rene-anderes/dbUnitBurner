@@ -6,12 +6,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang3.time.DateParser;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.datatype.AbstractDataType;
 import org.dbunit.dataset.datatype.TypeCastException;
