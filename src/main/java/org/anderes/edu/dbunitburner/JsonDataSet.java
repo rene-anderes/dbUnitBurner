@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Validate;
 import org.dbunit.DatabaseUnitRuntimeException;
@@ -38,7 +39,7 @@ public class JsonDataSet extends AbstractDataSet {
         Validate.notNull(filename);
         final URL url = this.getClass().getResource(filename);
         if (url == null) {
-            final String msg = "Could not find file named=" + filename;
+            final String msg = "Could not find file named = '" + filename + "'";
             throw new DatabaseUnitRuntimeException(msg);
         }
         tables = tableParser.getTables(url.openStream());
@@ -58,7 +59,7 @@ public class JsonDataSet extends AbstractDataSet {
 
         private final ObjectMapper mapper = new ObjectMapper();
 
-         @SuppressWarnings({ "unchecked" })
+        @SuppressWarnings({ "unchecked" })
         public List<ITable> getTables(InputStream jsonStream) throws IOException {
             Validate.notNull(jsonStream);
 
@@ -84,10 +85,7 @@ public class JsonDataSet extends AbstractDataSet {
                     columns.add(column.getKey());
                 }
             }
-            final List<Column> list = new ArrayList<Column>(columns.size());
-            for (String s : columns) {
-                list.add(new Column(s, DataType.UNKNOWN));
-            }
+            final List<Column> list = columns.stream().map(s -> new Column(s, DataType.UNKNOWN)).collect(Collectors.toList());
             return new DefaultTableMetaData(tableName, (Column[]) list.toArray(new Column[list.size()]));
         }
 
@@ -96,10 +94,9 @@ public class JsonDataSet extends AbstractDataSet {
                 table.addRow();
                 for (Map.Entry<String, Object> column : row.entrySet()) {
                     table.setValue(rowIndex, column.getKey(), column.getValue());
-
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e.getMessage(), e);
+                throw new DatabaseUnitRuntimeException(e.getMessage(), e);
             }
         }
     }

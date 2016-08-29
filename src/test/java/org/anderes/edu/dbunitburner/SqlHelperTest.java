@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.anderes.edu.dbunitburner.SqlHelper;
@@ -35,25 +37,27 @@ public class SqlHelperTest {
     @Test
     public void shouldBeExtractCommands() throws IOException {
         Path sqlFile = Paths.get("sql", "DeleteTableContentScript.sql");
-        List<String> commands = SqlHelper.extractSqlCommands(sqlFile);
+        Collection<String> commands = SqlHelper.extractSqlCommands(sqlFile);
         
         assertThat(commands, is(notNullValue()));
         assertThat(commands.size(), is(3));
-        assertThat(commands.get(0), is("delete from TAGS"));
-        assertThat(commands.get(1), is("delete from INGREDIENT"));
-        assertThat(commands.get(2), is("delete from RECIPE"));
+        final Iterator<String> iterator = commands.iterator();
+        assertThat(iterator.next(), is("delete from TAGS"));
+        assertThat(iterator.next(), is("delete from INGREDIENT"));
+        assertThat(iterator.next(), is("delete from RECIPE"));
     }
     
     @Test
     public void shouldBeExtractCommandsUnix() throws IOException {
         Path sqlFile = Paths.get("sql", "DeleteTableContentScriptUnix.sql");
-        List<String> commands = SqlHelper.extractSqlCommands(sqlFile);
+        Collection<String> commands = SqlHelper.extractSqlCommands(sqlFile);
         
         assertThat(commands, is(notNullValue()));
         assertThat(commands.size(), is(3));
-        assertThat(commands.get(0), is("delete from TAGS"));
-        assertThat(commands.get(1), is("delete from INGREDIENT"));
-        assertThat(commands.get(2), is("delete from RECIPE"));
+        final Iterator<String> iterator = commands.iterator();
+        assertThat(iterator.next(), is("delete from TAGS"));
+        assertThat(iterator.next(), is("delete from INGREDIENT"));
+        assertThat(iterator.next(), is("delete from RECIPE"));
     }
     
     @Test(expected = IOException.class)

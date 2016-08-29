@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Collection;
 
 import org.apache.commons.lang3.Validate;
 
@@ -31,17 +31,16 @@ public abstract class SqlHelper {
      * @return Liste von SQL-Kommandos
      * @throws IOException wenn das File nicht gelesen werden konnte
      */
-    public static List<String> extractSqlCommands(final Path sqlFilePath) throws IOException {
+    public static Collection<String> extractSqlCommands(final Path sqlFilePath) throws IOException {
         Validate.notNull(sqlFilePath);
         
         final InputStream is = ClassLoader.getSystemResourceAsStream(sqlFilePath.toString());
         if (is == null) {
-            final String msg = "Could not find file named = " + sqlFilePath;
+            final String msg = "Could not find file named = '" + sqlFilePath + "'";
             throw new IOException(msg);
         }
-        
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8.name()));
-        final List<String> commands = new ArrayList<String>();
+        final ArrayDeque<String> commands = new ArrayDeque<String>();
         
         String line = null;
         while((line = bufferedReader.readLine()) != null) {
@@ -51,7 +50,7 @@ public abstract class SqlHelper {
         return commands;
     }
     
-    public static int[] execute(final Connection connection, final List<String> queries) throws SQLException {
+    public static int[] execute(final Connection connection, final Collection<String> queries) throws SQLException {
         Validate.notNull(connection);
         Validate.notNull(queries);
         

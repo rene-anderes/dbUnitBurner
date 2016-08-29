@@ -1,6 +1,6 @@
 # dbUnitBurner
 
-Diese JUnit-Rule bietet die Möglichkeit mittels Annotations die für den Test notwendigen DB-Files (in den von DBUnit unterstützten Formaten) anzugeben:
+Diese JUnit-Rule (siehe https://github.com/junit-team/junit4/wiki/rules) bietet die Möglichkeit mittels Annotations die für den Test notwendigen DB-Files (in den von DBUnit unterstützten Formaten) anzugeben:
    ```
    @UsingDataSet(value = { "/prepare.xls" })
    ```

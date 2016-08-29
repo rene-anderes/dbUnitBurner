@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,10 +236,17 @@ public class DbUnitRule implements TestRule {
 
     private void processSqlScript(final String[] cleanupFiles) throws IOException, SQLException, Exception {
         for (String cleanupFile : cleanupFiles) {
-            final List<String> commands = SqlHelper.extractSqlCommands(Paths.get(cleanupFile));
-            int[] values = SqlHelper.execute(databaseTester.getConnection().getConnection(), commands);
+            final Collection<String> commands = SqlHelper.extractSqlCommands(Paths.get(cleanupFile));
+            int[] results = SqlHelper.execute(databaseTester.getConnection().getConnection(), commands);
+            resultToLogIsEnabled(commands, results);
+        }
+    }
+
+    private void resultToLogIsEnabled(final Collection<String> commands, int[] values) {
+        if (logger.isInfoEnabled()) {
+            final String[] commandArray = commands.toArray(new String[commands.size()]);
             for (int index = 0 ; index < commands.size(); index++) {
-                logger.info(commands.get(index) + ", Result: " + values[index]);
+                logger.info(commandArray[index] + ", Result: " + values[index]);
             }
         }
     }
