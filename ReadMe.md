@@ -36,4 +36,6 @@ Die Annotierungen `@UsingDataSet`, `@UsingDataSetScript` und `@CleanupUsingScrip
 
 <h3>Weiter Dokumentationen siehe im Wiki: https://github.com/rene-anderes/dbUnitBurner/wiki</h3>
 
+[![](https://jitpack.io/v/rene-anderes/dbUnitBurner.svg)](https://jitpack.io/#rene-anderes/dbUnitBurner)
+
 
