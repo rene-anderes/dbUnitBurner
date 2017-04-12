@@ -1,6 +1,6 @@
 # dbUnitBurner
 
-Diese JUnit-Rule (siehe https://github.com/junit-team/junit4/wiki/rules) bietet die Möglichkeit mittels Annotations die für den Test notwendigen DB-Files (XML, CSV, XLS und JSON) anzugeben:
+Diese [JUnit-Rule](https://github.com/junit-team/junit4/wiki/rules) bietet die Möglichkeit mittels Annotations die für den Test notwendigen DB-Files (XML, CSV, XLS und JSON) anzugeben:
 ```
    @UsingDataSet(value = { "/prepare.xls" })
 ```
@@ -33,6 +33,6 @@ Als Basis für diese JUnit-Rule dient [DBUnit](http://dbunit.sourceforge.net/)
 
 Die Annotierungen @UsingDataSet, @UsingDataSetScript und @CleanupUsingScript können sowohl für eine Methode als auch für eine Klasse gesetzt werden. Werden die Annotierungen auf der Klasse angebracht, so wird für jede Test-Methode die entsprechenden Files verwendet.
 
-<h3>Weiter Dokumentationen siehe im [Wiki](https://github.com/rene-anderes/dbUnitBurner/wiki)</h3>
+<h3>Weiter Dokumentationen siehe im Wiki: (https://github.com/rene-anderes/dbUnitBurner/wiki)</h3>
 
 
