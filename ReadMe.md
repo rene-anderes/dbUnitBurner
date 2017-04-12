@@ -34,6 +34,23 @@ Als Basis für diese JUnit-Rule dient [DBUnit](http://dbunit.sourceforge.net/)
 
 Die Annotierungen `@UsingDataSet`, `@UsingDataSetScript` und `@CleanupUsingScript` können sowohl für eine Methode als auch für eine Klasse gesetzt werden. Werden die Annotierungen auf der Klasse angebracht, so wird für jede Test-Methode die entsprechenden Files verwendet.
 
+Beispiel JUnit-Test
+```
+@UsingDataSet(value = { prepare.json })
+public class ProcessFacadeIT {
+
+    @Rule
+    public DbUnitRule dbunitRule = new DbUnitRule(Persistence.createEntityManagerFactory("pu").getConnection());
+
+    @Test
+    @ShouldMatchDataSet(value = { "ProcessAfterRemove.json" }
+    public void addProcess() {
+        ...
+    }
+
+}
+```
+
 <h3>Weiter Dokumentationen siehe im Wiki: https://github.com/rene-anderes/dbUnitBurner/wiki</h3>
 
 [![](https://jitpack.io/v/rene-anderes/dbUnitBurner.svg)](https://jitpack.io/#rene-anderes/dbUnitBurner)
