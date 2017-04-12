@@ -29,10 +29,10 @@ Es ist auch möglich, dass für das Laden von Testdaten ein (oder mehrere) SQl-S
 Die SQL-Scripts sollten im UTF-8 Format (ohne BOM) vorliegen. Eine Zeile im SQL-Script entspricht einem SQL-Kommando. Ein Delimiter wie z.B. ';' ist nicht notwendig.
 
 Es wird im Klassenpfad nach den entsprechenden Files gesucht.
-Als Basis für diese JUnit-Rule dient DBUnit (siehe http://dbunit.sourceforge.net/)
+Als Basis für diese JUnit-Rule dient [DBUnit](http://dbunit.sourceforge.net/)
 
 Die Annotierungen @UsingDataSet, @UsingDataSetScript und @CleanupUsingScript können sowohl für eine Methode als auch für eine Klasse gesetzt werden. Werden die Annotierungen auf der Klasse angebracht, so wird für jede Test-Methode die entsprechenden Files verwendet.
 
-Weiter Dokumentationen siehe im [Wiki](https://github.com/rene-anderes/dbUnitBurner/wiki)
+<h3>Weiter Dokumentationen siehe im [Wiki](https://github.com/rene-anderes/dbUnitBurner/wiki)</h3>
 
 
