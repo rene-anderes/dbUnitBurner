@@ -44,7 +44,7 @@ public class ProcessFacadeIT {
 
     @Test
     @ShouldMatchDataSet(value = { "ProcessAfterRemove.json" }
-    public void addProcess() {
+    public void shouldBeRemoveProcess() {
         ...
     }
 
