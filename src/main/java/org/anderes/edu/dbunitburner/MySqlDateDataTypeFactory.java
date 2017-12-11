@@ -1,10 +1,10 @@
 package org.anderes.edu.dbunitburner;
 
-import java.sql.Types;
+import java.util.Optional;
 
 import org.dbunit.dataset.datatype.DataType;
 import org.dbunit.dataset.datatype.DataTypeException;
-import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
+import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,19 +19,19 @@ import org.slf4j.LoggerFactory;
  * @author René Anderes
  *
  */
-public class CustomDataTypeFactory extends DefaultDataTypeFactory {
+public class MySqlDateDataTypeFactory extends MySqlDataTypeFactory {
+
+    private Logger logger = LoggerFactory.getLogger(MySqlDateDataTypeFactory.class);
     
-    private Logger logger = LoggerFactory.getLogger(DbUnitRule.class);
-    
+    @Override
     public DataType createDataType(int sqlType, String sqlTypeName) throws DataTypeException {
-        if (sqlType == Types.TIMESTAMP) {
-            logger.debug(String.format("Für den SQL-Type '%s' wird Klasse '%s' eingesetzt.", sqlTypeName, CustomTimestampDataType.class.getName()));
-            return new CustomTimestampDataType();
-        } else if (sqlType == Types.DATE) {
-            logger.debug(String.format("Für den SQL-Type '%s' wird Klasse '%s' eingesetzt.", sqlTypeName, CustomDateDataType.class.getName()));
-            return new CustomDateDataType();
-        } else {
-            return super.createDataType(sqlType, sqlTypeName);
+        Optional<DataType> optionalDatType = DbUnitBurnerHelper.createDataType(sqlType, sqlTypeName);
+        if (optionalDatType.isPresent()) {
+            final DataType dataType = optionalDatType.get();
+            logger.debug(String.format("Für den SQL-Type '%s' wird Klasse '%s' eingesetzt.", sqlTypeName, dataType.getClass().getName()));
+            return dataType;
         }
+        return super.createDataType(sqlType, sqlTypeName);
     }
+    
 }

@@ -1,16 +1,16 @@
 package org.anderes.edu.dbunitburner;
 
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apache.commons.lang3.StringUtils.containsNone;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
+import static org.dbunit.database.DatabaseConfig.PROPERTY_DATATYPE_FACTORY;
 import static org.junit.Assert.fail;
-import static java.lang.annotation.ElementType.*;
 
 import java.io.IOException;
 import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.*;
-
 import java.lang.annotation.Target;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -29,9 +29,6 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.IOperationListener;
-
-import static org.dbunit.database.DatabaseConfig.*;
-
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
@@ -129,8 +126,10 @@ public class DbUnitRule implements TestRule {
     public DbUnitRule(Connection connection) {
         Validate.notNull(connection, "connection darf nicht null sein");
         try {
-            databaseTester = new DefaultDatabaseTester(new DatabaseConnection(connection));
-        } catch (DatabaseUnitException e) {
+            DatabaseConnection databaseConnection = new DatabaseConnection(connection);
+            databaseConnection.getConfig().setProperty(PROPERTY_DATATYPE_FACTORY, DbUnitBurnerHelper.resolveDataTypeFactory(connection));
+            databaseTester = new DefaultDatabaseTester(databaseConnection);
+        } catch (DatabaseUnitException | SQLException e) {
             fail(e.getMessage());
         }
     }

@@ -2,17 +2,17 @@
 
 Diese [JUnit-Rule](https://github.com/junit-team/junit4/wiki/rules) bietet die Möglichkeit mittels Annotations die für den Test notwendigen DB-Files (XML, CSV, XLS und JSON) anzugeben:
 ```
-   @UsingDataSet(value = { "/prepare.xls" })
+   @UsingDataSet(value = { "/prepare.json" })
 ```
    
 Es können auch mehrere Files angegeben werden:
 ```
-   @UsingDataSet(value = { "/Person.xls", "Offer.xls" })
+   @UsingDataSet(value = { "/Person.json", "Offer.json" })
 ```
 Ebenfalls können das oder die Files angegeben werden mittels denen DBUnit die Datenbank nach der Test-Methode überprüft:
 ```
    @ShouldMatchDataSet(
-        value = { "/expectedAfterDelete.xls" },
+        value = { "/expectedAfterDelete.json" },
         excludeColumns = { "INGREDIENT.ID" },
         orderBy = { "RECIPE.UUID", "INGREDIENT.ID" })
 ```

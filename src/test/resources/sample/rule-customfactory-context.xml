@@ -14,6 +14,6 @@
         <constructor-arg ref="customDataTypeFactory"></constructor-arg>
     </bean>
      
-    <bean name="customDataTypeFactory" class="org.anderes.edu.dbunitburner.CustomDataTypeFactory"></bean>
+    <bean name="customDataTypeFactory" class="org.anderes.edu.dbunitburner.DerbyDateDataTypeFactory"></bean>
   
 </beans>
